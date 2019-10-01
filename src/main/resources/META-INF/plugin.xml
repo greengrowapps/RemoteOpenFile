@@ -1,0 +1,40 @@
+<idea-plugin>
+    <id>com.greengrowapps.remoteopenfile</id>
+    <name>Remote open file</name>
+    <vendor email="info@greengrowapps.com" url="https://greengrowapps.com">Green Grow Apps</vendor>
+
+    <description>Simple plugin to open intellij files and go to line  from a websocket </description>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+
+    <depends>com.intellij.modules.lang</depends>
+
+
+    <extensions defaultExtensionNs="com.intellij">
+        <applicationService serviceInterface="com.greengrowapps.remoteopenfile.services.RofAppService"
+                            serviceImplementation="com.greengrowapps.remoteopenfile.services.RofAppService"/>
+        <applicationService serviceInterface="com.greengrowapps.remoteopenfile.services.LogService"
+                            serviceImplementation="com.greengrowapps.remoteopenfile.services.LogService"/>
+        <toolWindow id="Remote open file" secondary="true" icon="PluginIcons.ROF_TOOL_WINDOW" anchor="right"
+                    factoryClass="com.greengrowapps.remoteopenfile.toolwindows.RofToolWindowFactory"/>
+        <applicationConfigurable groupId="tools" displayName="Remote Open File Settings" id="preferences.RemoteOpenFileSettings" instance="com.greengrowapps.remoteopenfile.settings.RofSettings" />
+
+    </extensions>
+
+<!--    <actions>
+        <group id="MyPlugin.SampleMenu" text="Greeting" description="Greeting menu">
+            <add-to-group group-id="MainMenu" anchor="last"/>
+            <action id="Myplugin.Textboxes" class="com.greengrowapps.remoteopenfile.HelloAction" text="Hello" description="Says hello"/>
+        </group>
+    </actions>-->
+
+    <application-components>
+        <component>
+            <implementation-class>com.greengrowapps.remoteopenfile.RofApplicationComponent</implementation-class>
+        </component>
+    </application-components>
+
+
+
+</idea-plugin>

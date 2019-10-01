@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<meta charset="utf-8" xmlns="http://www.w3.org/1999/html"/>
+<title>WebSocket Test</title>
+<script src="RemoteOpenFile.js"></script>
+<script language="javascript" type="text/javascript">
+
+    var output;
+    var rof;
+
+    function init()
+    {
+        output = document.getElementById("output");
+    }
+    function onConnected() {
+        document.getElementById("connectedDiv").style.visibility = "visible";
+        document.getElementById("disconnectedDiv").style.visibility = "hidden";
+    }
+    function onDisconnected() {
+        document.getElementById("connectedDiv").style.visibility = "hidden";
+        document.getElementById("disconnectedDiv").style.visibility = "visible";
+    }
+
+    function connect() {
+        closeConnection();
+        rof = new Rof(
+            {
+                connectOnPort:function (port,projects) {
+                    writeToScreen("Connection on port "+port+" projects:"+projects.join());
+                    onConnected();
+                },
+                closedOnPort:function (port,moreConnections) {
+                    writeToScreen("Closed connection on port "+port);
+                    if(!moreConnections){
+                        onDisconnected();
+                        writeToScreen("All connections closed");
+                    }
+                }
+            }
+        );
+        rof.conect();
+    }
+    function closeConnection() {
+        if(rof) {
+            rof.close();
+            rof=null;
+        }
+    }
+    function openFile() {
+        var file = document.getElementById("fileName").value;
+        var line = document.getElementById("lineNumber").value;
+        rof.openFileAndLine(file, line);
+    }
+
+
+    function writeToScreen(message)
+    {
+        var pre = document.createElement("p");
+        pre.style.wordWrap = "break-word";
+        pre.innerHTML = message;
+        output.appendChild(pre);
+    }
+    function clearScreen(){
+        output.innerHTML="";
+    }
+
+    window.addEventListener("load", init, false);
+
+</script>
+
+<h2>Remote open file Test</h2>
+
+<div id="disconnectedDiv">
+    <button  onclick="connect()"> Connect</button>
+</div>
+<div id="connectedDiv" style="visibility: hidden">
+    <input type="text" value="asdfasdf.txxt" id="fileName" />
+    <input type="number" value="2" id="lineNumber" />
+    <button  onclick="openFile()"> OpenFile</button></br>
+    <button  onclick="closeConnection()"> Disconnect</button>
+</div>
+
+
+<div id="output"></div>
